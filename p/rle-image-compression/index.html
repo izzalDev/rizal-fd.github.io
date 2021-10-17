@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Apa itu image compression? Sering kali dalam kehidupan sehari-hari kita menggunakan citra/gambar baik itu untuk keperluan akademik maupun sosial media namun apakah kita tahu bahwa sebenarnya citra digital yang kita gunakan sebenarnya merupakan interpretasi dari matriks, ya matriks yang sering kita pelajari dulu ketika di SMA. Sebuah citra digital merupakan matriks dua hingga tiga dimensi. Untuk citra hitam putih &amp; grayscale sendiri tersusun dari matriks dua dimensi sedangkan citra berwarna (RGB) tersusun dari matriks tiga dimensi.'><title>  RFd&#39;s Blog |  RLE Image compression </title>
+
+
+<link rel='canonical' href='https://rizal-fd.github.io/p/rle-image-compression/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script><meta property='og:title' content='RLE Image compression'>
+<meta property='og:description' content='Apa itu image compression? Sering kali dalam kehidupan sehari-hari kita menggunakan citra/gambar baik itu untuk keperluan akademik maupun sosial media namun apakah kita tahu bahwa sebenarnya citra digital yang kita gunakan sebenarnya merupakan interpretasi dari matriks, ya matriks yang sering kita pelajari dulu ketika di SMA. Sebuah citra digital merupakan matriks dua hingga tiga dimensi. Untuk citra hitam putih &amp; grayscale sendiri tersusun dari matriks dua dimensi sedangkan citra berwarna (RGB) tersusun dari matriks tiga dimensi.'>
+<meta property='og:url' content='https://rizal-fd.github.io/p/rle-image-compression/'>
+<meta property='og:site_name' content='RFd&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='image' /><meta property='article:tag' content='processing' /><meta property='article:tag' content='compression' /><meta property='article:tag' content='python' /><meta property='article:tag' content='rle' /><meta property='article:published_time' content='2021-10-14T18:05:40&#43;07:00'/><meta property='article:modified_time' content='2021-10-14T18:05:40&#43;07:00'/>
+<meta name="twitter:title" content="RLE Image compression">
+<meta name="twitter:description" content="Apa itu image compression? Sering kali dalam kehidupan sehari-hari kita menggunakan citra/gambar baik itu untuk keperluan akademik maupun sosial media namun apakah kita tahu bahwa sebenarnya citra digital yang kita gunakan sebenarnya merupakan interpretasi dari matriks, ya matriks yang sering kita pelajari dulu ketika di SMA. Sebuah citra digital merupakan matriks dua hingga tiga dimensi. Untuk citra hitam putih &amp; grayscale sendiri tersusun dari matriks dua dimensi sedangkan citra berwarna (RGB) tersusun dari matriks tiga dimensi.">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X7NK5C2NP1"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-X7NK5C2NP1', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="https://rizal-fd.github.io/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/image-processing/" >
+                image processing
+            </a>
+        
+            <a href="/categories/image-compression/" >
+                image compression
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/rle-image-compression/">RLE Image compression</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 14, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="apa-itu-image-compression">Apa itu image compression?</h2>
+<div style="text-align: justify">
+Sering kali dalam kehidupan sehari-hari kita menggunakan citra/gambar baik itu untuk keperluan akademik maupun sosial media namun apakah kita tahu bahwa sebenarnya citra digital yang kita gunakan sebenarnya merupakan interpretasi dari matriks, ya matriks yang sering kita pelajari dulu ketika di SMA. Sebuah citra digital merupakan matriks dua hingga tiga dimensi. Untuk citra hitam putih & grayscale sendiri tersusun dari matriks dua dimensi sedangkan citra berwarna (RGB) tersusun dari matriks tiga dimensi. Tahukan kamu bahwa hasil citra pada kamera sebenarnya berformat RAW?, citra berformat RAW ini memiliki ukuran yang besar sehingga perlu dimampatkan (kompres). Pemampatan ini bertujuan untuk mengurangi ukuran file agar lebih efisien. Secara garis besar ada dua teknik kompresi pada citra, yaitu lossless dan lossy. Pada teknik kompresi lossless citra akan direkonstruksi secara sempurna tanpa mengurangi kualitas citra sedangkan teknik kompresi lossy compression atau juga disebut irreversible compression merupakan teknik kompresi yang menggunakan perkiraan yang tidak tepak dan membuang sebagian data untuk mewakili konten. 
+</div>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 221; 
+			flex-basis: 530px"
+	>
+	<a href="/p/rle-image-compression/img-num-ilustration.png" data-size="854x386">
+		<img src="/p/rle-image-compression/img-num-ilustration.png"
+			width="854"
+			height="386"
+			srcset="/p/rle-image-compression/img-num-ilustration_hu2069f4590ac78272a0cae739db885122_115458_480x0_resize_box_3.png 480w, /p/rle-image-compression/img-num-ilustration_hu2069f4590ac78272a0cae739db885122_115458_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="Ilustrasi citra digital">
+	</a>
+	
+	<figcaption>Ilustrasi citra digital</figcaption>
+	
+</figure></p>
+<h2 id="konsep-rle-run-length-encoding">Konsep RLE (Run Length Encoding)</h2>
+<div style="text-align: justify">
+RLE (Run Length Encoding) merupakan salah satu teknik kompresi lossless yang paling mudah dipraktikkan. Konsep RLE Compression adalah dengan memeriksa pengulangan nilai pixel yang terjadi berturut-turut. Algoritma ini dapat bekerja dengan efisien pada citra biner.
+<p>Mari kita ambil contoh citra [ 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1 0 0 0 1 1 1 ] memiiki 21 pixel dan terdiri dari binary. Untuk menggunakan algoritma RLE langkah - langkah yang perlu kita lakukan sebagai berikut.</p>
+<ol>
+<li>Langkah awal, pointer saat ini ada pada pixel pertama yaitu  0 . Kemudian kita kompresi menjadi [01] yang artinya 0 diulang sebanyak 1 kali.</li>
+<li>Selanjutnya bernilai 1 yang diulang sebanyak 5 kali setelah itu kita gabungkan pada hasil kompresi sebelumnya menjadi [01 15].</li>
+<li>Kemudian bernilai 0 yang diulang sebanyak 6 kali dan kita gabungkan dengan hasil kompresi sebelumnya menjadi [01 15 06].</li>
+<li>Ulang langkah sebelumnya sampai dengan pixel terakhir.</li>
+<li>Hasil RLE [01 15 06 13 03 13]
+Citra sebelumnya memiliki 21 nilai sekarang setelah dikompress menjadi 6 nilai.</li>
+</ol>
+<p>Sekarang untuk mendekompresi atau mengembalikan nilai semula yaitu,</p>
+<ol>
+<li>Nilai awal yaitu 01, yang berarti 0 diulang sebanyak satu kali. Menghasilkan [1].</li>
+<li>Selanjutnya yaitu 15. Kita lakukan seperti sebelumnya, dan digabung dengan hasil sebelumnya menghasilkan [0 1 1 1 1 1].</li>
+<li>Dan seterusnya.</li>
+</ol>
+</div>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 148; 
+			flex-basis: 356px"
+	>
+	<a href="/p/rle-image-compression/rle-illustration.webp" data-size="425x286">
+		<img src="/p/rle-image-compression/rle-illustration.webp"
+			width="425"
+			height="286"
+			srcset="/p/rle-image-compression/rle-illustration_hu685f5a5d9da6854685fc9c27ce5501fc_9302_480x0_resize_q75_h2_box_2.webp 480w, /p/rle-image-compression/rle-illustration_hu685f5a5d9da6854685fc9c27ce5501fc_9302_1024x0_resize_q75_h2_box_2.webp 1024w"
+			loading="lazy"
+			alt="Ilustrasi RLE">
+	</a>
+	
+	<figcaption>Ilustrasi RLE</figcaption>
+	
+</figure></p>
+<h2 id="implementasi-pada-python">Implementasi pada Python</h2>
+<h3 id="persiapan-awal">Persiapan Awal</h3>
+<p>Import dependensi dan deklarasi fungsi pendukung yang akan digunakan.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># Fungsi untuk menampilkan citra</span>
+<span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">title</span><span class="o">=</span><span class="s2">&#34;Image&#34;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RGB&#39;</span><span class="p">):</span>
+    <span class="n">figure</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/rle-image-compression/lena.jpg" data-size="225x225">
+		<img src="/p/rle-image-compression/lena.jpg"
+			width="225"
+			height="225"
+			srcset="/p/rle-image-compression/lena_hu67053652fd2ccbb3547344ca57621bac_8006_480x0_resize_q75_box.jpg 480w, /p/rle-image-compression/lena_hu67053652fd2ccbb3547344ca57621bac_8006_1024x0_resize_q75_box.jpg 1024w"
+			loading="lazy"
+			alt="contoh citra">
+	</a>
+	
+	<figcaption>contoh citra</figcaption>
+	
+</figure></p>
+<p>Mari kita cari tahu ukuran citra diatas dengan python.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># fungsi untuk menampilkan ukuran file</span>
+<span class="k">def</span> <span class="nf">get_size</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&#34;lena.jpg&#34;</span><span class="p">):</span>
+    <span class="n">stat</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">size</span><span class="o">=</span><span class="n">stat</span><span class="o">.</span><span class="n">st_size</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">size</span><span class="o">/</span><span class="mi">1024</span><span class="p">,</span><span class="s1">&#39;KB&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">size</span>
+<span class="n">get_size</span><span class="p">()</span>
+</code></pre></div><pre tabindex="0"><code class="language-terminal" data-lang="terminal">7.818359375 KB
+</code></pre><p>Diketahui bahwa contoh citra memiliki ukuran 7,8KB</p>
+<h3 id="fungsi-encoding">Fungsi Encoding</h3>
+<p>Sekarang kita lakukan RLE compression pada contah citra lena dan kita save kedalam file.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># read graysclae img</span>
+<span class="k">def</span> <span class="nf">RLE_encoding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>  <span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">    img: Grayscale img.
+</span><span class="s2">    bits: what will be the maximum run length? 2^bits       
+</span><span class="s2">    &#34;&#34;&#34;</span>
+    <span class="k">if</span> <span class="n">binary</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">,</span><span class="n">img</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="mi">127</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="n">cv</span><span class="o">.</span><span class="n">THRESH_BINARY</span><span class="o">+</span><span class="n">cv</span><span class="o">.</span><span class="n">THRESH_OTSU</span><span class="p">)</span>
+
+    <span class="n">encoded</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">shape</span><span class="o">=</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">prev</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">fimg</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="n">th</span><span class="o">=</span><span class="mi">127</span>
+    <span class="k">for</span> <span class="n">pixel</span> <span class="ow">in</span> <span class="n">fimg</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">binary</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pixel</span><span class="o">&lt;</span><span class="n">th</span><span class="p">:</span>
+                <span class="n">pixel</span><span class="o">=</span><span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pixel</span><span class="o">=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">prev</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+            <span class="n">prev</span> <span class="o">=</span> <span class="n">pixel</span>
+            <span class="n">count</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prev</span><span class="o">!=</span><span class="n">pixel</span><span class="p">:</span>
+                <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="p">,</span> <span class="n">prev</span><span class="p">))</span>
+                <span class="n">prev</span><span class="o">=</span><span class="n">pixel</span>
+                <span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">count</span><span class="o">&lt;</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">bits</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">count</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="p">,</span> <span class="n">prev</span><span class="p">))</span>
+                    <span class="n">prev</span><span class="o">=</span><span class="n">pixel</span>
+                    <span class="n">count</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">encoded</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">count</span><span class="p">,</span> <span class="n">prev</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="c1"># read image as grayscale</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;lena.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">encoded</span> <span class="o">=</span> <span class="n">RLE_encoding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">cv</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s1">&#39;encode.tif&#39;</span><span class="p">,</span><span class="n">encoded</span><span class="p">)</span>
+</code></pre></div><p>Setelah itu kita cek ukuran file setelah di encoding</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">get_size</span><span class="p">(</span><span class="s1">&#39;encoded.tif&#39;</span><span class="p">)</span>
+</code></pre></div><pre tabindex="0"><code class="language-terminal" data-lang="terminal">57.708984375 KB
+</code></pre><p>Hasilnya citra grayscale tersebut justru memiliki ukuran yang lebih besar daripada sebelum dilakukan encoding. Mari kita coba kita encoding citra tersebut kedalam citra binary.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">encoded_bin</span> <span class="o">=</span> <span class="n">RLE_encoding</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cv</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s1">&#39;encoded_bin.tif&#39;</span><span class="p">,</span><span class="n">encoded_bin</span><span class="p">)</span>
+<span class="n">get_size</span><span class="p">(</span><span class="s1">&#39;encoded_bin.tif&#39;</span><span class="p">)</span>
+</code></pre></div><pre tabindex="0"><code class="language-terminal" data-lang="terminal">4.322265625 KB
+</code></pre><p>Hasilnya ketika dilakukan RLE pada citra binary ukuran file hasil kompresi jauh lebih kecil daripada citra asli.</p>
+<h3 id="fungsi-decoding">Fungsi Decoding</h3>
+<p>Untuk menampilkan kembali citra yang sudah diencoding perlu dilakukan decoding terlebih dahulu.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># Fungsi untuk melakukan decoding</span>
+<span class="k">def</span> <span class="nf">RLE_decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+    <span class="n">decoded</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rl</span> <span class="ow">in</span> <span class="n">encoded</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="n">rl</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rl</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">decoded</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">p</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">dimg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dimg</span>
+<span class="n">decode</span> <span class="o">=</span> <span class="n">RLE_decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">,</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">decode_bin</span> <span class="o">=</span> <span class="n">RLE_decode</span><span class="p">(</span><span class="n">encoded_bin</span><span class="p">,</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">decode</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&#34;gray&#34;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">decode_bin</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&#34;gray&#34;</span><span class="p">)</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 99; 
+			flex-basis: 239px"
+	>
+	<a href="/p/rle-image-compression/lena-grayscale.png" data-size="557x558">
+		<img src="/p/rle-image-compression/lena-grayscale.png"
+			width="557"
+			height="558"
+			srcset="/p/rle-image-compression/lena-grayscale_hu2558035b13303a2d23ec24635fb0ca56_184391_480x0_resize_box_3.png 480w, /p/rle-image-compression/lena-grayscale_hu2558035b13303a2d23ec24635fb0ca56_184391_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="Lena grayscale">
+	</a>
+	
+	<figcaption>Lena grayscale</figcaption>
+	
+</figure>  <figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 99; 
+			flex-basis: 239px"
+	>
+	<a href="/p/rle-image-compression/lena-binary.png" data-size="557x558">
+		<img src="/p/rle-image-compression/lena-binary.png"
+			width="557"
+			height="558"
+			srcset="/p/rle-image-compression/lena-binary_hu1082150a4084a38bceca3b4ef8221bfd_88704_480x0_resize_box_3.png 480w, /p/rle-image-compression/lena-binary_hu1082150a4084a38bceca3b4ef8221bfd_88704_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			alt="Lena binary">
+	</a>
+	
+	<figcaption>Lena binary</figcaption>
+	
+</figure></p>
+<h2 id="simpulan">Simpulan</h2>
+<p>Percobaan yang dilakukan ini mungkin memakan banyak waktu dan hasil yang diberikan tidak mengejutkan. Tapi kesimpulan yang dapat diambil dari percobaan ini adalah RLE (Run Length Encoding) dapat bekerja dengan baik dengan ketika:</p>
+<ol>
+<li>Citra yang akan diproses merupakan citra binary</li>
+<li>Frekuensi piksel pada citra tidak terlalu besar.</li>
+<li>Menyimpan dengan format TIFF.</li>
+</ol>
+<p><strong>Referensi</strong><br>
+   Gonzalez, Rafael C. 2001. <em>Digital Image Processing Second Edition</em>. Tom Robbins.<br>
+   Eddine ALAA, Nour, dan Ismail Zine El Abidne. 2021. <em>Introduction to Image Processing with Python</em>. Cadi Ayyad University.<br>
+   Viper, Quassarian. 2021. <em>Image Compression In Python: Run Length Encoding</em>. <a class="link" href="https://q-viper.github.io/2021/05/24/coding-run-length-encoding-in-python/"  target="_blank" rel="noopener"
+    >https://q-viper.github.io/2021/05/24/coding-run-length-encoding-in-python/</a> (diakses tanggal 15 Oktober 2021)<br>
+   Hanifah, Riska. 2017. <em>Image Compression</em>. <a class="link" href="https://dosen.perbanas.id/image-compression/"  target="_blank" rel="noopener"
+    >https://dosen.perbanas.id/image-compression/</a> (diakses tanggal 15 Oktober 2021)<br></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/image/">image</a>
+        
+            <a href="/tags/processing/">processing</a>
+        
+            <a href="/tags/compression/">compression</a>
+        
+            <a href="/tags/python/">python</a>
+        
+            <a href="/tags/rle/">rle</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+     
+     
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "rfds-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2021 RFd&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.2.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#apa-itu-image-compression">Apa itu image compression?</a></li>
+    <li><a href="#konsep-rle-run-length-encoding">Konsep RLE (Run Length Encoding)</a></li>
+    <li><a href="#implementasi-pada-python">Implementasi pada Python</a>
+      <ol>
+        <li><a href="#persiapan-awal">Persiapan Awal</a></li>
+        <li><a href="#fungsi-encoding">Fungsi Encoding</a></li>
+        <li><a href="#fungsi-decoding">Fungsi Decoding</a></li>
+      </ol>
+    </li>
+    <li><a href="#simpulan">Simpulan</a></li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
