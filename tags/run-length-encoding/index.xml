@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>run length encoding on RFd&#39;s Blog</title>
+    <link>https://rizal-fd.github.io/tags/run-length-encoding/</link>
+    <description>Recent content in run length encoding on RFd&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 14 Oct 2021 18:05:40 +0700</lastBuildDate><atom:link href="https://rizal-fd.github.io/tags/run-length-encoding/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>RLE Image compression</title>
+      <link>https://rizal-fd.github.io/p/rle-image-compression/</link>
+      <pubDate>Thu, 14 Oct 2021 18:05:40 +0700</pubDate>
+      
+      <guid>https://rizal-fd.github.io/p/rle-image-compression/</guid>
+      <description>Apa itu image compression? Sering kali dalam kehidupan sehari-hari kita menggunakan citra/gambar baik itu untuk keperluan akademik maupun sosial media namun apakah kita tahu bahwa sebenarnya citra digital yang kita gunakan sebenarnya merupakan interpretasi dari matriks, ya matriks yang sering kita pelajari dulu ketika di SMA. Sebuah citra digital merupakan matriks dua hingga tiga dimensi. Untuk citra hitam putih &amp; grayscale sendiri tersusun dari matriks dua dimensi sedangkan citra berwarna (RGB) tersusun dari matriks tiga dimensi.</description>
+    </item>
+    
+  </channel>
+</rss>

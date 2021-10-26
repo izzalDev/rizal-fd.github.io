@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Pengantar Image enhancement atau peningkatan citra merupakan salah satu proses awal pengolahan citra (image processing) untuk mendapatkan citra yang hasilnya lebih sesuai dari citra asli untuk kepentingan tertentu. Tujuan yang spesifik sangatlah penting, karena berorientasi pada tujuan digunakannya suatu citra. Contohnya seperti dilakukannya peningkatan kualitas pada citra X-tray/Rontgen tentu saja metodenya akan berbeda dengan citra yang ditingkatkan untuk citra keperluan antariksa.
+Metode peningkatan citra digital dibagi menjadi dua jenis, yaitu metode domain spasial dan metode domain frekuensi.'><title>  RFd&#39;s Blog |  Image Enhancement - Point Processing </title>
+
+
+<link rel='canonical' href='https://rizal-fd.github.io/p/image-enhancement-point-processing/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script><meta property='og:title' content='Image Enhancement - Point Processing'>
+<meta property='og:description' content='Pengantar Image enhancement atau peningkatan citra merupakan salah satu proses awal pengolahan citra (image processing) untuk mendapatkan citra yang hasilnya lebih sesuai dari citra asli untuk kepentingan tertentu. Tujuan yang spesifik sangatlah penting, karena berorientasi pada tujuan digunakannya suatu citra. Contohnya seperti dilakukannya peningkatan kualitas pada citra X-tray/Rontgen tentu saja metodenya akan berbeda dengan citra yang ditingkatkan untuk citra keperluan antariksa.
+Metode peningkatan citra digital dibagi menjadi dua jenis, yaitu metode domain spasial dan metode domain frekuensi.'>
+<meta property='og:url' content='https://rizal-fd.github.io/p/image-enhancement-point-processing/'>
+<meta property='og:site_name' content='RFd&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='image' /><meta property='article:tag' content='processing' /><meta property='article:tag' content='enhancement' /><meta property='article:tag' content='python' /><meta property='article:tag' content='point processing' /><meta property='article:tag' content='domain spatial' /><meta property='article:tag' content='mask processing' /><meta property='article:published_time' content='2021-10-23T18:21:31&#43;07:00'/><meta property='article:modified_time' content='2021-10-23T18:21:31&#43;07:00'/><meta property='og:image' content='https://rizal-fd.github.io/p/image-enhancement-point-processing/background.jpeg' />
+<meta name="twitter:title" content="Image Enhancement - Point Processing">
+<meta name="twitter:description" content="Pengantar Image enhancement atau peningkatan citra merupakan salah satu proses awal pengolahan citra (image processing) untuk mendapatkan citra yang hasilnya lebih sesuai dari citra asli untuk kepentingan tertentu. Tujuan yang spesifik sangatlah penting, karena berorientasi pada tujuan digunakannya suatu citra. Contohnya seperti dilakukannya peningkatan kualitas pada citra X-tray/Rontgen tentu saja metodenya akan berbeda dengan citra yang ditingkatkan untuk citra keperluan antariksa.
+Metode peningkatan citra digital dibagi menjadi dua jenis, yaitu metode domain spasial dan metode domain frekuensi."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://rizal-fd.github.io/p/image-enhancement-point-processing/background.jpeg' />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-X7NK5C2NP1"></script>
+<script>
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-X7NK5C2NP1', { 'anonymize_ip': false });
+}
+</script>
+
+    </head>
+    <body class="
+    article-page has-toc
+">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex 
+    
+        extended
+    
+">
+    
+        <div id="article-toolbar">
+            <a href="https://rizal-fd.github.io/" class="back-home">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+                <span>Back</span>
+            </a>
+        </div>
+    
+<main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/image-enhancement-point-processing/">
+                <img src="/p/image-enhancement-point-processing/background_hu8bb55b9ae64f18b41e2e1aae1cb4ddde_390648_800x0_resize_q75_box.jpeg"
+                        srcset="/p/image-enhancement-point-processing/background_hu8bb55b9ae64f18b41e2e1aae1cb4ddde_390648_800x0_resize_q75_box.jpeg 800w, /p/image-enhancement-point-processing/background_hu8bb55b9ae64f18b41e2e1aae1cb4ddde_390648_1600x0_resize_q75_box.jpeg 1600w"
+                        width="800" 
+                        height="454" 
+                        loading="lazy"
+                        alt="Featured image of post Image Enhancement - Point Processing" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/image-processing/" >
+                image processing
+            </a>
+        
+            <a href="/categories/image-enhancement/" >
+                image enhancement
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/image-enhancement-point-processing/">Image Enhancement - Point Processing</a>
+    </h2>
+
+    
+
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Oct 23, 2021</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+</div>
+</header>
+
+    <section class="article-content">
+    <h2 id="pengantar">Pengantar</h2>
+<p>Image enhancement atau peningkatan citra merupakan salah satu proses awal pengolahan citra (image processing) untuk mendapatkan citra yang hasilnya lebih sesuai dari citra asli untuk kepentingan tertentu. Tujuan yang spesifik sangatlah penting, karena berorientasi pada tujuan digunakannya suatu citra. Contohnya seperti dilakukannya peningkatan kualitas pada citra X-tray/Rontgen tentu saja metodenya akan berbeda dengan citra yang ditingkatkan untuk citra keperluan antariksa.</p>
+<p>Metode peningkatan citra digital dibagi menjadi dua jenis, yaitu metode domain spasial dan metode domain frekuensi. Istilah metode domain spasial mengacu pada bidang gambar dan pendekatan metode ini dilakukan dengan memanipulasi langsung pada nilai piksel citra. Sedangkan pada domain frekuensi dilakukan dengan menggunakan Transformasi Fourier, yaitu nilai matriks dari citra yang sebelumnya berada pada domain spasial diubah ke domain frekuensi. Pada artikel kali ini yang akan kita bahas adalah metode domain spasial. Dalam metode domain spasial sendiri terbagi menjadi dua yaitu point processing dan mask processing</p>
+<h2 id="konsep-point-processing">Konsep Point Processing</h2>
+<p>Point Processing (Operasi Titik) yaitu metode peningakatan citra dimana untuk melakukannya tidak ada ketergantungan terhadap titik-titik/piksel yang ada disekelilingnya. Dalam kata lain piksel yang ada langsung diproses secara individu tanpa mempengaruhi piksel yang ada disekelilingnya. Beberapa metode point processing antara lain: Inversi Citra (Citra Negatif), peningkatan kecerahan, peregangan kontras, , pemotongan aras keabuan (Tresholding), dan Ekualisasi Histogram.</p>
+<h3 id="citra-negatif">Citra Negatif</h3>
+<p>Operasi ini menghasilkan citra seperti pada film (negative) foto. Operasi ini mengubah piksel terang menjadi gelap dan sebaliknya. Sedangkan jika dilihat pada histogram operasi ini menghasilkan cerminan/kebalikan dari histogram citra awal. Operasi ini dilakukan dengan cara mengurangi nilai intensitas piksel dari intensitas maksimum piksel atau secara matematis dapat dituliskan sebagai berikut:  $ f'_{(x,y)} = f _{max} - f _{(x,y)} $</p>
+<p>Implementasi pada python:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># Import  dependensi yang diperlukan terlebih dahulu</span>
+<span class="kn">import</span> <span class="nn">cv2</span> <span class="k">as</span> <span class="nn">cv</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># deklarasi fungsi pendukung</span>
+<span class="k">def</span> <span class="nf">show</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">):</span>
+    <span class="c1"># fungsi ini digunakan untuk menampilkan citra</span>
+    <span class="n">figure</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+<span class="c1"># Membaca image menggunakan opencv</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;sample.jpg&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div><p>Dalam dependensi numpy terdapat operasi elementwise dimana secara otomatis numpy akan melakukan operasi secara otomatis terhadap element-element yang ada didalam matriks operasi ini dapat dilakukan dengan matriks yang dimensinya sama atau bisa juga dilakukan dengan skalar/konstanta</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="c1"># inversi citra</span>
+<span class="n">inv</span> <span class="o">=</span> <span class="mi">255</span> <span class="o">-</span> <span class="n">img</span>
+<span class="n">show</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="s2">&#34;Original Image&#34;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">inv</span><span class="p">,</span><span class="s2">&#34;Negative Image&#34;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/image-enhancement-point-processing/sample.png" data-size="800x800">
+		<img src="/p/image-enhancement-point-processing/sample.png"
+			width="800"
+			height="800"
+			srcset="/p/image-enhancement-point-processing/sample_hu058e716ba15f7651ffd8b5f5dd82c9f8_233932_480x0_resize_box_3.png 480w, /p/image-enhancement-point-processing/sample_hu058e716ba15f7651ffd8b5f5dd82c9f8_233932_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure> <figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/image-enhancement-point-processing/img-negative.png" data-size="800x800">
+		<img src="/p/image-enhancement-point-processing/img-negative.png"
+			width="800"
+			height="800"
+			srcset="/p/image-enhancement-point-processing/img-negative_hu9723f1132d486f21dd820dd7e12d7784_234438_480x0_resize_box_3.png 480w, /p/image-enhancement-point-processing/img-negative_hu9723f1132d486f21dd820dd7e12d7784_234438_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="peningkatan-kecerahan">Peningkatan Kecerahan</h3>
+<p>Peningkatan kecerahan (brightness) juga merupakan salah satu operasi dasar pada pengolahan citra. Peningkatan kecerahan dilakukan agar mendapatkan citra yang lebih terang. Untuk melakukan operasi peningkatan kecerahan pada citra dilakukan dengan cara melakukan penambahan nilai dari tiap-tiap piksel dengan suatu konstanta. Secara matematis dapat ditulis sebagai berikut : $ f'_{(x,y)} = f _{(x,y)} + \beta $ . Dimana $\beta$ adalah konstanta, jika bernilai positif maka kecerahan akan naik dan sebaliknya.</p>
+<p>Implementasi pada program :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">output</span> <span class="o">=</span> <span class="n">img</span> <span class="o">+</span> <span class="mi">30</span>
+<span class="n">show</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="s2">&#34;Original Image&#34;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="s2">&#34;Brightness Adjustment Image&#34;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/image-enhancement-point-processing/sample.png" data-size="800x800">
+		<img src="/p/image-enhancement-point-processing/sample.png"
+			width="800"
+			height="800"
+			srcset="/p/image-enhancement-point-processing/sample_hu058e716ba15f7651ffd8b5f5dd82c9f8_233932_480x0_resize_box_3.png 480w, /p/image-enhancement-point-processing/sample_hu058e716ba15f7651ffd8b5f5dd82c9f8_233932_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure> <figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/image-enhancement-point-processing/img-brightness.png" data-size="800x800">
+		<img src="/p/image-enhancement-point-processing/img-brightness.png"
+			width="800"
+			height="800"
+			srcset="/p/image-enhancement-point-processing/img-brightness_hu686c355194477599304cbd9742ac8159_240379_480x0_resize_box_3.png 480w, /p/image-enhancement-point-processing/img-brightness_hu686c355194477599304cbd9742ac8159_240379_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<h3 id="peregangan-kontras">Peregangan Kontras</h3>
+<p>Pada suatu citra digital kontras merupakan distribusi warna terang dan gelap. Suatu citra dikatakan memiliki kontras yang rendah apabila jangkauan nilai pikselnya sempit. Sebaliknya, sebuah citra digital dinyatakan kontrasnya tinggi ketika jangkauan nilai pikselnya lebar.</p>
+<p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 222; 
+			flex-basis: 533px"
+	>
+	<a href="/p/image-enhancement-point-processing/compare-contras-histogram.jpeg" data-size="540x243">
+		<img src="/p/image-enhancement-point-processing/compare-contras-histogram.jpeg"
+			width="540"
+			height="243"
+			srcset="/p/image-enhancement-point-processing/compare-contras-histogram_hu001410508bfdfa740453b558911c4551_16310_480x0_resize_q75_box.jpeg 480w, /p/image-enhancement-point-processing/compare-contras-histogram_hu001410508bfdfa740453b558911c4551_16310_1024x0_resize_q75_box.jpeg 1024w"
+			loading="lazy"
+			alt="a) Low contras || b) High contras">
+	</a>
+	
+	<figcaption>a) Low contras || b) High contras</figcaption>
+	
+</figure></p>
+<p>Untuk meningkatkan kontras suatu citra digital dapat dilakukan dengan cara mengalikan nilai tiap piksel dari citra dengan konstanta. Sebaliknya apabila ingin mengurangi citra maka dapat dilakukan dengan membagi nilai tiap piksel dengan konstanta. Secara matematis dapat ditulis sebagai berikut : $ f' _{(x,y)} = \alpha f _{(x,y)} $ dimana $\alpha$ adalah konstanta</p>
+<p>Implementasi dalam program.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="n">output</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">img</span>
+<span class="n">show</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="s2">&#34;Original Image&#34;</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">,</span><span class="s2">&#34;Contras Adjustment Image&#34;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div><h3 id="thresholding">Thresholding</h3>
+<p>Thresholding atau pemotongan aras keabuan dapat dihasilkan dengan operasi berikut:</p>
+<p>$$
+f' _{(x,y)} = \begin{cases}
+\begin{align*}
+0 &amp;, x \le f_1 \newline
+f _{(x,y)}&amp;, f_1 &lt; f _{(x,y)} &lt; f_2 \newline
+255 &amp;, x \ge f_2
+\end{align*}
+\end{cases}
+$$</p>
+<p>nilai $f'$ dinolkan atau dipotong habis untuk nilai asli dari 0 hingga $f_1$ karena dianggap tidak mengandung informasi penting. Berlaku juga untuk nilai piksel dari $f_2$ keatas, yang mungkin hanya mengandung derau(noise).</p>
+<p>Implementasi pada program.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">thres</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">f1</span><span class="p">,</span><span class="n">f2</span><span class="p">):</span>
+    <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">j</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="n">j</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">src</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">f1</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> 
+            <span class="k">elif</span> <span class="n">src</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">f2</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span>
+            <span class="k">else</span> <span class="p">:</span>
+                 <span class="n">result</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">]</span><span class="o">=</span> <span class="mi">255</span>
+    <span class="k">return</span> <span class="n">result</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">thres</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">show</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="s2">&#34;Original Image&#34;</span><span class="p">,(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s2">&#34;Threshold Image&#34;</span><span class="p">,(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div><p><figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/image-enhancement-point-processing/sample.png" data-size="800x800">
+		<img src="/p/image-enhancement-point-processing/sample.png"
+			width="800"
+			height="800"
+			srcset="/p/image-enhancement-point-processing/sample_hu058e716ba15f7651ffd8b5f5dd82c9f8_233932_480x0_resize_box_3.png 480w, /p/image-enhancement-point-processing/sample_hu058e716ba15f7651ffd8b5f5dd82c9f8_233932_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure> <figure 
+	
+		class="gallery-image" 
+		style="
+			flex-grow: 100; 
+			flex-basis: 240px"
+	>
+	<a href="/p/image-enhancement-point-processing/img-threshold.png" data-size="800x800">
+		<img src="/p/image-enhancement-point-processing/img-threshold.png"
+			width="800"
+			height="800"
+			srcset="/p/image-enhancement-point-processing/img-threshold_hu5f7532023da716f3eebcd1211062cf5a_200995_480x0_resize_box_3.png 480w, /p/image-enhancement-point-processing/img-threshold_hu5f7532023da716f3eebcd1211062cf5a_200995_1024x0_resize_box_3.png 1024w"
+			loading="lazy"
+			>
+	</a>
+	
+</figure></p>
+<p><strong>Referensi</strong><br>
+   Gonzalez, Rafael C. 2001. <em>Digital Image Processing Second Edition</em>. Tom Robbins.<br>
+   Eddine ALAA, Nour, dan Ismail Zine El Abidne. 2021. <em>Introduction to Image Processing with Python</em>. Cadi Ayyad University.<br>
+   Kadir, Abdul, dan Adhi Susanto. 2012. <em>Pengolahan Citra Teori dan Aplikasi</em>. Yogyakarta.<br></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/image/">image</a>
+        
+            <a href="/tags/processing/">processing</a>
+        
+            <a href="/tags/enhancement/">enhancement</a>
+        
+            <a href="/tags/python/">python</a>
+        
+            <a href="/tags/point-processing/">point processing</a>
+        
+            <a href="/tags/domain-spatial/">domain spatial</a>
+        
+            <a href="/tags/mask-processing/">mask processing</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css"integrity="sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js"integrity="sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js"integrity="sha384-vZTG03m&#43;2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl"crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ]
+        });})
+</script>
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">Related contents</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="has-image">
+    <a href="/p/rle-image-compression/">
+        
+        
+            <div class="article-image">
+                <img src="/p/rle-image-compression/background.d4be68253e3c26f1b6acf0eb4c919141_hu0a29cb01f8c4e7973182e9356a3c7079_45339_250x150_fill_box_smart1_3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy" 
+                        data-key="" 
+                        data-hash="md5-1L5oJT48JvG2rPDrTJGRQQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RLE Image compression</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+     
+     
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "rfds-blog" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2021 RFd&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.2.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+
+            </main>
+    
+        <aside class="sidebar right-sidebar sticky">
+            <section class="widget archives">
+                <div class="widget-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+                </div>
+                <h2 class="widget-title section-title">Table of contents</h2>
+                
+                <div class="widget--toc">
+                    <nav id="TableOfContents">
+  <ol>
+    <li><a href="#pengantar">Pengantar</a></li>
+    <li><a href="#konsep-point-processing">Konsep Point Processing</a>
+      <ol>
+        <li><a href="#citra-negatif">Citra Negatif</a></li>
+        <li><a href="#peningkatan-kecerahan">Peningkatan Kecerahan</a></li>
+        <li><a href="#peregangan-kontras">Peregangan Kontras</a></li>
+        <li><a href="#thresholding">Thresholding</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+                </div>
+            </section>
+        </aside>
+    
+
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
